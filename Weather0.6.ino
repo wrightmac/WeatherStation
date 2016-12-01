@@ -1,3 +1,7 @@
+// wrightmac Labs 2016
+// Peter Hein
+// version 0.6
+
 #include <LCD5110_Basic.h>
 #include <Wire.h>
 #include "SPI.h"
@@ -6,22 +10,19 @@
 #include <stdint.h>
 
 // DHT22 Connection
+// All pin on the sensor go from right to left looking at
+// front of the sensor, side with the grill
 // Connect pin 1 to +5V
-// NOTE: If using a board with 3.3V logic like an Arduino Due connect pin 1
-// to 3.3V instead of 5V!
-// Connect pin 2 of the sensor to whatever your DHTPIN is
+// Connect pin 2 of the sensor to DHTPIN
 // Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
-// Connect pin 4 (on the right) of the sensor to GROUND
-#define DHTPIN 2     // what digital pin we're connected to
-#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-
-
+// Connect pin 4 to GROUND
+// define which pin
+#define DHTPIN 2
+#define DHTTYPE DHT22
 
 // Initialize DHT22 sensor.
 DHT dht(DHTPIN, DHTTYPE);
 BME280 myBMP;
-
-
 
 //The Nokia 5110 LCD
 LCD5110 myGLCD(8,9,10,11,12);
@@ -40,17 +41,17 @@ void setup() {
   myBMP.settings.runMode = 3; //  3, Normal mode
   myBMP.settings.tStandby = 5; //  0, 0.5ms
   myBMP.settings.filter = 0; //  0, filter off
-  //tempOverSample can be:
+  //tempOverSample:
   //  0, skipped
-  //  1 through 5, oversampling *1, *2, *4, *8, *16 respectively
+  //  1 through 5
   myBMP.settings.tempOverSample = 2;
-  //pressOverSample can be:
+  //pressOverSample:
   //  0, skipped
-  //  1 through 5, oversampling *1, *2, *4, *8, *16 respectively
+  //  1 through 5
   myBMP.settings.pressOverSample = 2;
-  //humidOverSample can be:
+  //humidOverSample:
   //  0, skipped
-  //  1 through 5, oversampling *1, *2, *4, *8, *16 respectively
+  //  1 through 5
   //mySensor.settings.humidOverSample = 1;
   myBMP.settings.I2CAddress = 0x76;
   
@@ -92,14 +93,11 @@ void loop() {
   int btempf = myBMP.readTempF();
   float bpres = myBMP.readFloatPressure();
   
-
   // Check if any reads failed and exit early (to try again).
   if (isnan(dhum) || isnan(dtfar)) {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
-
-
 
   // Print data reading to the LCD
   myGLCD.clrScr();
